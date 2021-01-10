@@ -11,9 +11,13 @@ namespace CookingPrototype.Controllers {
 	public sealed class GameplayController : MonoBehaviour {
 		public static GameplayController Instance { get; private set; }
 
-		public GameObject TapBlock   = null;
-		public WinWindow  WinWindow  = null;
-		public LoseWindow LoseWindow = null;
+		public static bool isPause = true;
+
+		public GameObject  TapBlock    = null;
+		public StartWindow StartWindow = null;
+		public WinWindow   WinWindow   = null;
+		public LoseWindow  LoseWindow  = null;
+		
 
 
 		int _ordersTarget = 0;
@@ -22,9 +26,12 @@ namespace CookingPrototype.Controllers {
 			get { return _ordersTarget; }
 			set {
 				_ordersTarget = value;
+				OrdersTargetChanged?.Invoke();
 				TotalOrdersServedChanged?.Invoke();
 			}
 		}
+
+		public event Action OrdersTargetChanged;
 
 		public int        TotalOrdersServed { get; private set; } = 0;
 
@@ -35,6 +42,8 @@ namespace CookingPrototype.Controllers {
 				Debug.LogError("Another instance of GameplayController already exists");
 			}
 			Instance = this;
+
+			StartWindow.Show();
 		}
 
 		void OnDestroy() {
@@ -45,7 +54,9 @@ namespace CookingPrototype.Controllers {
 
 		void Init() {
 			TotalOrdersServed = 0;
-			Time.timeScale = 1f;
+			Time.timeScale = 0f;
+			isPause = true;
+
 			TotalOrdersServedChanged?.Invoke();
 		}
 
@@ -67,6 +78,7 @@ namespace CookingPrototype.Controllers {
 
 		void HideWindows() {
 			TapBlock?.SetActive(false);
+			StartWindow?.Hide();
 			WinWindow?.Hide();
 			LoseWindow?.Hide();
 		}
@@ -83,10 +95,19 @@ namespace CookingPrototype.Controllers {
 			return true;
 		}
 
-		public void Restart() {
+		public void StartGame() {
+			Time.timeScale = 1f;
+			isPause = false;
+
+			HideWindows();
+		}
+
+		public void RestartGame() {
 			Init();
 			CustomersController.Instance.Init();
 			HideWindows();
+
+			StartWindow.Show();
 
 			foreach ( var place in FindObjectsOfType<AbstractFoodPlace>() ) {
 				place.FreePlace();

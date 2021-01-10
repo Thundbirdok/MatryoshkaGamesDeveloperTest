@@ -18,7 +18,7 @@ namespace CookingPrototype.UI {
 		void Init() {
 			var gc = GameplayController.Instance;
 
-			ReplayButton.onClick.AddListener(gc.Restart);
+			ReplayButton.onClick.AddListener(gc.RestartGame);
 			ExitButton  .onClick.AddListener(gc.CloseGame);
 			CloseButton .onClick.AddListener(gc.CloseGame);
 		}

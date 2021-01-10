@@ -56,6 +56,10 @@ namespace CookingPrototype.Controllers {
 		}
 
 		void Update() {
+			if ( GameplayController.isPause ) {
+				return;
+			}
+
 			if ( !HasFreePlaces ) {
 				return;
 			}

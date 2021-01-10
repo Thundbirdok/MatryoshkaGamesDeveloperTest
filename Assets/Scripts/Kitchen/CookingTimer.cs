@@ -3,6 +3,8 @@ using UnityEngine.UI;
 
 using System;
 
+using CookingPrototype.Controllers;
+
 namespace CookingPrototype.Kitchen {
 	public sealed class CookingTimer : MonoBehaviour {
 		[Serializable]
@@ -52,6 +54,10 @@ namespace CookingPrototype.Kitchen {
 		}
 
 		void Update() {
+			if ( GameplayController.isPause ) {
+				return;
+			}
+
 			if ( Place == null ) {
 				return;
 			}

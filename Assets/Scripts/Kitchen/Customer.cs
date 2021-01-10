@@ -30,6 +30,10 @@ namespace CookingPrototype.Kitchen {
 		public bool IsComplete { get { return _orders.Count == 0; } }
 
 		void Update() {
+			if ( GameplayController.isPause ) {
+				return;
+			}
+
 			if ( !_isActive ) {
 				return;
 			}
